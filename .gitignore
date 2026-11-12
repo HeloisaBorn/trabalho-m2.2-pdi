@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+.env.*
+!.env.example
+.vscode/
+.DS_Store
+Thumbs.db
+# Dados locais: registrar fontes antes de publicar arquivos.
+data/originais/*
+!data/originais/.gitkeep

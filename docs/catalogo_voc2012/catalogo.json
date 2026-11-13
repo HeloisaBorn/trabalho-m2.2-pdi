@@ -8,8 +8,12 @@
     "dificulta": "Janelas, rodas, reflexos e sombra ainda produzem regiões internas.",
     "avaliacao": "SLIC tende a separar bem grandes superfícies. Watershed ainda requer marcadores/controle de mínimos.",
     "url_previa": "https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/examples/images/car_04.jpg",
-    "id_original_voc": null,
-    "arquivo": "previas/car_04.jpg"
+    "id_original_voc": "2009_003974",
+    "arquivo": "previas/car_04.jpg",
+    "selecionada": true,
+    "original_local": "data/originais/2009_003974.jpg",
+    "split": "Main/train",
+    "mascara_segmentacao": false
   },
   {
     "ordem": 2,

@@ -2,12 +2,29 @@
 
 Os quatro URLs abaixo foram recuperados dos objetos internos do `Trabalho M2.pdf`, página 2.
 
-## Parte 1 — escolher uma imagem
+## Parte 1 — imagem escolhida: carro azul (VOC2012)
 
 - [BSD500, conforme link do enunciado](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/).
 - [VOC2012, conforme link do enunciado](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/).
 
-Registrar aqui o dataset escolhido, identificador do arquivo, URL de obtenção e justificativa. Essa escolha ainda não foi feita.
+Escolha confirmada: **`2009_003974.jpg`**, correspondente à prévia **`car_04`**.
+
+- Arquivo local: `data/originais/2009_003974.jpg`, original limpo, sem caixas ou textos desenhados.
+- Dimensões: **500 × 335 pixels**, RGB.
+- Dataset: VOC2012, listas `ImageSets/Main/train.txt` e `trainval.txt`; classe `car` positiva. A imagem é herdada do VOC2009, conforme o XML, e está efetivamente incluída no pacote VOC2012.
+- Fonte: [pacote oficial VOC2012](https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar), membro `VOCdevkit/VOC2012/JPEGImages/2009_003974.jpg`.
+- Justificativa: um carro grande, sem oclusão na anotação, fundo claro e quase uniforme; bom ponto de partida para estudar ruído, filtragem e contornos. Reflexos, rodas, janelas e sombra continuam sendo desafios.
+- O JPEG foi extraído do arquivo oficial sem edição, recorte ou remoção artificial de marcações. Correspondência visual com a prévia conferida.
+- `segmented=0` no XML: não há máscara de segmentação declarada para esta imagem. Usar comparação visual/metodologia de contornos; não inventar métricas contra uma máscara inexistente.
+- XML, SHA-256, caminho no pacote e evidências de split estão em `data/metadados/2009_003974.xml` e `.json`.
+
+Para obter a mesma imagem em outro computador, executar na raiz do projeto:
+
+```powershell
+python scripts/baixar_imagem_voc2012.py
+```
+
+O script baixa somente os bytes do JPEG no pacote oficial e valida o SHA-256. Se o servidor deixar de oferecer leitura parcial, baixar o pacote e extrair o membro acima. A imagem local permanece ignorada pelo Git; o script e os metadados permitem reproduzir a obtenção.
 
 ## Parte 2 — as duas imagens exigidas
 

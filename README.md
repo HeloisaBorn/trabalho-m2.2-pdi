@@ -24,7 +24,7 @@ Cada integrante entrega o código, as figuras, o texto e os slides da sua seçã
 
 ## Estado inicial
 
-Este repositório contém a organização e os roteiros de desenvolvimento. Os algoritmos, experimentos, imagens de entrada, resultados, relatório PDF e slides ainda precisam ser produzidos. Os notebooks iniciais não são a entrega pré-executada.
+Este repositório contém a organização e os roteiros de desenvolvimento. A imagem natural original escolhida já está disponível localmente. Os algoritmos, experimentos, duas imagens da Parte 2, resultados, relatório PDF e slides ainda precisam ser produzidos. Os notebooks iniciais não são a entrega pré-executada.
 
 ## Executar localmente
 
@@ -37,7 +37,7 @@ python -m pip install -r requirements.txt
 python -m jupyterlab
 ```
 
-Abrir os notebooks de cada frente e executar a célula de configuração. Inserir imagens em `data/originais/` e registrar suas fontes em `data/README.md`. O notebook final deverá importar os módulos de `src/` e executar as duas partes do trabalho do início ao fim.
+Abrir os notebooks de cada frente e executar a célula de configuração. A imagem `data/originais/2009_003974.jpg` já está disponível localmente. Em outro computador, obtê-la com `python scripts/baixar_imagem_voc2012.py`. As fontes estão em `data/README.md`. O notebook final deverá importar os módulos de `src/` e executar as duas partes do trabalho do início ao fim.
 
 ## Estrutura
 
@@ -102,4 +102,4 @@ Links recuperados dos objetos internos do PDF. Ver instruções em `data/README.
 
 ## Escolha da imagem VOC2012
 
-Avaliação visual de 14 candidatos em [catálogo de opções](docs/catalogo_voc2012/LEIA-ME.md). Recomendação inicial: `car_04`; alternativa com gato: `cat_03`. A escolha definitiva e o ID do original ainda estão pendentes. As fotos de prévia ficam locais, ignoradas pelo Git.
+Avaliação visual de 14 candidatos em [catálogo de opções](docs/catalogo_voc2012/LEIA-ME.md). Escolha confirmada: **`car_04` → `2009_003974.jpg`**, original VOC2012 disponível localmente (500 × 335, RGB, split de treino). Fonte, justificativa e reprodução em `data/README.md`. As fotos de prévia ficam locais, ignoradas pelo Git.

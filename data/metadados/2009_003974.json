@@ -1,0 +1,144 @@
+{
+  "id": "2009_003974",
+  "alias_galeria": "car_04",
+  "arquivo": "data/originais/2009_003974.jpg",
+  "source_archive": "https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar",
+  "archive_member": "VOCdevkit/VOC2012/JPEGImages/2009_003974.jpg",
+  "archive_offset": 860052480,
+  "archive_size": 67147,
+  "sha256": "a3690fa0aed129f1e392e70e3908a218fe45a3b431ed00548404ab94c27901b4",
+  "splits": {
+    "VOCdevkit/VOC2012/ImageSets/Main/aeroplane_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/aeroplane_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bicycle_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bicycle_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bird_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bird_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/boat_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/boat_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bottle_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bottle_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bus_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/bus_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/car_train.txt": [
+      "2009_003974  1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/car_trainval.txt": [
+      "2009_003974  1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/cat_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/cat_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/chair_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/chair_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/cow_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/cow_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/diningtable_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/diningtable_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/dog_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/dog_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/horse_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/horse_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/motorbike_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/motorbike_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/person_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/person_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/pottedplant_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/pottedplant_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/sheep_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/sheep_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/sofa_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/sofa_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/train.txt": [
+      "2009_003974"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/trainval.txt": [
+      "2009_003974"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/train_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/train_trainval.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/tvmonitor_train.txt": [
+      "2009_003974 -1"
+    ],
+    "VOCdevkit/VOC2012/ImageSets/Main/tvmonitor_trainval.txt": [
+      "2009_003974 -1"
+    ]
+  },
+  "validation": "Correspondência visual com car_04 confirmada; JPEG e XML extraídos sem alteração do pacote oficial VOC2012. Presença nas listas Main/train e Main/trainval conferida.",
+  "width": 500,
+  "height": 335,
+  "mode": "RGB",
+  "segmented": false,
+  "selected_for": "Parte 1 do Trabalho M2.2: ruído, filtragem na frequência, PSNR, Watershed e SLIC."
+}

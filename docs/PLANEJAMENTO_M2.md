@@ -114,3 +114,7 @@ Ensaio sugerido de 12 minutos: contexto (1), filtragem (3), Watershed/SLIC (3), 
 - Notion informado: https://private-zinc-3e1.notion.site/Processamento-Digital-de-Imagens-42c3c2abd8654404b1a1e05d70fa5eb0. Não acessível pelo conector nem pela consulta pública nesta sessão; conteúdo não incorporado.
 - Os links do PDF foram recuperados examinando objetos internos, pois não apareciam nas anotações das páginas. Imagem 1: `gap-region-filling.tif`; Imagem 2: `002f20ad-2ace-499c-9335-c9080bc3e6b5.png`, ambas em `VielF/ColabProjects/dataset/OperacaoMorfologia`. URLs completos em `data/README.md`. Imagens ainda precisam ser baixadas; selecionar também uma imagem BSD500/VOC2012.
 - Repositório remoto criado pela Born: https://github.com/HeloisaBorn/trabalho-m2.2-pdi. Commit e push serão feitos pela própria Born. Usuários GitHub de Gustavo e João Paulo ainda não informados.
+
+## Imagem natural definida
+
+A prévia `car_04` foi identificada como `2009_003974.jpg`, original RGB 500 × 335, extraído do pacote oficial VOC2012 e conferido nas listas Main/train e Main/trainval. Disponível localmente em `data/originais/`. Não há máscara de segmentação declarada (`segmented=0`). Ver `data/README.md` e `scripts/baixar_imagem_voc2012.py`. As etapas anteriores de escolha da imagem natural estão resolvidas; as duas imagens da Parte 2 continuam por baixar.

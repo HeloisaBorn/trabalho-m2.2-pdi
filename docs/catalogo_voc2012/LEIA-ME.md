@@ -62,3 +62,7 @@ Dois animais sobrepostos; gato parcialmente oculto; fundo camuflado; tons semelh
 - [Exemplos com máscaras](https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/segexamples/index.html).
 
 As cópias em `previas/` são reproduções de exemplos anotados da fonte oficial para consulta local. Conferir termos das imagens antes de republicar o catálogo com fotos; não assumir que o dataset inteiro tem uma única licença livre.
+
+## Escolha confirmada
+
+O original da `car_04` foi localizado: **`2009_003974.jpg`**, RGB 500 × 335, presente no pacote oficial VOC2012 e no split Main/train. Disponível em `data/originais/`. A pendência de ID/original descrita na triagem está resolvida para esta candidata. Não há máscara declarada no XML. Detalhes em `data/README.md`.

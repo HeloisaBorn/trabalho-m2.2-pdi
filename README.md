@@ -48,7 +48,7 @@ data/                 Fontes e imagens de entrada
 resultados/           Figuras e tabelas dos experimentos
 relatorio/            Texto e PDF do relatório
 apresentacao/         Roteiro e slides
-docs/                 Planejamento, tarefas e comparação com trabalhos anteriores
+docs/                 Planejamento, tarefas e catálogo de imagens
 ```
 
 Consulte [planejamento](docs/PLANEJAMENTO_M2.md), [tarefas](docs/TAREFAS.md) e [acordos técnicos](src/README.md).

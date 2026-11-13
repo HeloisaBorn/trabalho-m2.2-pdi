@@ -99,3 +99,7 @@ Os módulos listados são arquivos planejados, ainda não implementados.
 - Parte 2: [Imagem 1 — gap-region-filling.tif](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/gap-region-filling.tif) e [Imagem 2 — 002f20ad-2ace-499c-9335-c9080bc3e6b5.png](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/002f20ad-2ace-499c-9335-c9080bc3e6b5.png).
 
 Links recuperados dos objetos internos do PDF. Ver instruções em `data/README.md`.
+
+## Escolha da imagem VOC2012
+
+Avaliação visual de 14 candidatos em [catálogo de opções](docs/catalogo_voc2012/LEIA-ME.md). Recomendação inicial: `car_04`; alternativa com gato: `cat_03`. A escolha definitiva e o ID do original ainda estão pendentes. As fotos de prévia ficam locais, ignoradas pelo Git.

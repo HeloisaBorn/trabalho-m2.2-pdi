@@ -11,3 +11,7 @@ Thumbs.db
 # Dados locais: registrar fontes antes de publicar arquivos.
 data/originais/*
 !data/originais/.gitkeep
+
+# Prévias do catálogo: consulta local; conferir direitos antes de publicar.
+docs/catalogo_voc2012/previas/
+docs/catalogo_voc2012/comparacao.jpg

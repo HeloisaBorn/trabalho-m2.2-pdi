@@ -4,114 +4,72 @@ Filtragem na frequência, segmentação com Watershed/SLIC e processamento morfo
 
 Disciplina: Processamento de Imagens — Professor Felipe Viel — Univali.
 
-**Entrega oficial: 16/11/2026 até 18h59.** Meta interna: envio até 17h.
+## Integrantes e responsabilidades
 
-## Integrantes
+| Integrante | Responsabilidade | Arquivos |
+|---|---|---|
+| Heloisa Cavalcante Born | Ruído, filtragem na frequência, espectros, inversa e PSNR; integração do notebook | `src/frequencia.py`, `src/metricas.py`, `notebooks/rascunhos/01_frequencia.ipynb` |
+| Gustavo Corrêa de Mello | Watershed, SLIC e comparação de regiões e contornos | `notebooks/rascunhos/02_segmentacao.ipynb`; módulo `src/segmentacao.py` a implementar |
+| João Paulo Jorge Aimi | Limiarização, morfologia, preenchimento e contagem própria; consolidação do relatório | `notebooks/rascunhos/03_celulas.ipynb`; módulos `src/morfologia.py` e `src/contagem.py` a implementar |
 
-- Heloisa Cavalcante Born
-- Gustavo Corrêa de Mello
-- João Paulo Jorge Aimi
+## Executar
 
-## Equipe e divisão
-
-| Integrante | Responsabilidades |
-|---|---|
-| Born | Ruído, filtro na frequência, espectros, inversa e PSNR; montagem das tabelas/painéis comparativos e integração do notebook final |
-| Gustavo | Watershed e SLIC; comparação das segmentações, regiões e contornos; interpretação dos resultados |
-| João Paulo | Limiarização, morfologia, preenchimento de buracos e contagem própria nas duas imagens celulares; consolidação do relatório |
-
-Cada integrante entrega o código, as figuras, o texto e os slides da sua seção. Todos revisam o trabalho completo e devem saber explicar todas as partes.
-
-## Estado inicial
-
-Este repositório contém a organização e os roteiros de desenvolvimento. A frente da Born está implementada: ruído, filtros Gaussianos/Butterworth na frequência, inversa, PSNR, experimentos e figuras. O notebook da Born foi executado integralmente e está salvo com saídas; a integração final ainda depende de Watershed/SLIC e células. As duas imagens da Parte 2, relatório PDF e slides finais ainda estão pendentes. O notebook principal identifica explicitamente as partes pendentes e não constitui a entrega completa.
-
-## Executar localmente
-
-Recomendação de ambiente: Python 3.11 ou superior.
+Ambiente utilizado: Python 3.12. Dependências em `requirements.txt`.
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
+python scripts/baixar_imagem_voc2012.py
 python -m jupyterlab
 ```
 
-Abrir os notebooks de cada frente e executar a célula de configuração. A imagem `data/originais/2009_003974.jpg` já está disponível localmente. Em outro computador, obtê-la com `python scripts/baixar_imagem_voc2012.py`. As fontes estão em `data/README.md`. O notebook final deverá importar os módulos de `src/` e executar as duas partes do trabalho do início ao fim.
+Abrir `notebooks/rascunhos/01_frequencia.ipynb` para reproduzir a filtragem. O notebook principal, `notebooks/trabalho_m2_2.ipynb`, contém a integração parcial e identifica as etapas de segmentação e células ainda pendentes.
+
+Também é possível gerar os resultados e executar os testes pelo terminal:
+
+```powershell
+python scripts/experimento_frequencia.py
+python -m unittest discover -s tests -v
+```
+
+Para testar outra imagem sem substituir os resultados oficiais:
+
+```powershell
+python scripts/experimento_frequencia.py --imagem CAMINHO_DA_IMAGEM --destino resultados/teste
+```
 
 ## Estrutura
 
 ```text
-src/                  Módulos dos algoritmos (a implementar)
-notebooks/            trabalho_m2_2.ipynb (entrega) e rascunhos/ (individuais)
-data/                 Fontes e imagens de entrada
-resultados/           Figuras e tabelas dos experimentos
-relatorio/            Texto e PDF do relatório
-apresentacao/         Roteiro e slides
-docs/                 Planejamento, tarefas e catálogo de imagens
+src/              Implementações dos algoritmos
+scripts/          Obtenção da imagem, experimentos e execução dos notebooks
+notebooks/        Notebook principal e desenvolvimento por frente
+data/             Imagens, fontes e metadados
+resultados/       Imagens, espectros, tabelas e arrays dos experimentos
+tests/            Verificações matemáticas
+relatorio/        Relatório do trabalho
+apresentacao/     Slides
+docs/             Tarefas de desenvolvimento
 ```
 
-Consulte [planejamento](docs/PLANEJAMENTO_M2.md), [tarefas](docs/TAREFAS.md) e [acordos técnicos](src/README.md).
+## Dados e resultados
 
-## Trabalho em grupo
+- Imagem natural: **`2009_003974.jpg`**, VOC2012, RGB 500 × 335, conjunto de treino. Fonte, justificativa e reprodução em [dados](data/README.md).
+- As duas imagens da parte morfológica estão vinculadas na mesma documentação.
+- Resultados de filtragem e instruções para usar os arrays na segmentação: [resultados](resultados/frequencia/README.md).
+- Relatório: [texto](relatorio/relatorio.md).
+- Slides disponíveis da filtragem: `apresentacao/parte_born.pptx`.
 
-Usar branches `feat/frequencia` (Born), `feat/segmentacao` (Gustavo) e `feat/celulas` (João Paulo). Cada pessoa edita seu notebook em `notebooks/rascunhos/`; Born consolida `trabalho_m2_2.ipynb`. Integrar por pull request com revisão de outro integrante. Não atribuir código de colegas a si próprio.
+## Desenvolvimento
 
-## Checklist de entrega
+[Tarefas do grupo](docs/TAREFAS.md) e [convenções dos módulos](src/README.md).
 
-- [ ] Parte 1 com imagem BSD500/VOC2012, ruído, filtro na frequência, espectros e inversa
-- [ ] PSNR contra a imagem original limpa; SSIM opcional
-- [ ] Watershed e SLIC, regiões e contornos comparados com metodologia explícita
-- [ ] Parte 2 com as duas imagens celulares indicadas pelo professor
-- [ ] Limiarização, fechamento, preenchimento e abertura documentados
-- [ ] Contagem própria antes/depois e rótulos coloridos
-- [ ] Notebook final executado integralmente, com saídas salvas
-- [ ] Relatório acadêmico PDF e slides
-- [ ] Repositório público e acessível; materiais enviados na disciplina
-- [ ] Ensaio de 10 a 15 minutos e revisão por todos
+As implementações não usam funções prontas de filtragem ou operações pontuais. A contagem deve ser própria. NumPy fornece as operações numéricas e a FFT.
 
 ## Referências
 
-- Enunciado `Trabalho M2.pdf` fornecido na disciplina (referência normativa).
+- Enunciado do Trabalho M2 fornecido na disciplina.
 - [Materiais do professor](https://github.com/VielF/ColabProjects/tree/main/PDI).
-- [Página da disciplina](https://private-zinc-3e1.notion.site/Processamento-Digital-de-Imagens-42c3c2abd8654404b1a1e05d70fa5eb0) — acesso pendente de conferência pelo grupo.
-
-Funções prontas de filtragem e operações pontuais não são aceitas; a contagem deve ser própria. A proposta é também implementar os algoritmos centrais de segmentação e morfologia, citando os exemplos adaptados. O trabalho anterior do grupo já usa FFT do NumPy; esta proposta mantém essa abordagem, sujeita às orientações do enunciado atual. Os PDFs de aula não estão incluídos neste repositório.
-
-## Mapa dos itens do enunciado
-
-| Item | Implementação prevista | Responsável |
-|---|---|---|
-| Ruído, filtro na frequência, espectros e inversa | `src/frequencia.py` | Born |
-| PSNR (SSIM opcional) | `src/metricas.py` | Born |
-| Watershed e SLIC | `src/segmentacao.py` | Gustavo |
-| Comparação das regiões e contornos | `notebooks/rascunhos/02_segmentacao.ipynb` | Gustavo; painéis por Born |
-| Limiarização e morfologia | `src/morfologia.py` | João Paulo |
-| Contagem própria e comparação por etapa | `src/contagem.py` | João Paulo |
-| Integração das duas partes e resultados | `notebooks/trabalho_m2_2.ipynb` | Born, com revisão de todos |
-| Relatório e apresentação | `relatorio/` e `apresentacao/` | Todos |
-
-Os módulos listados são arquivos planejados, ainda não implementados.
-
-## Dados indicados no PDF
-
-- Parte 1: escolher uma imagem de [BSD500](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/) ou [VOC2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/).
-- Parte 2: [Imagem 1 — gap-region-filling.tif](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/gap-region-filling.tif) e [Imagem 2 — 002f20ad-2ace-499c-9335-c9080bc3e6b5.png](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/002f20ad-2ace-499c-9335-c9080bc3e6b5.png).
-
-Links recuperados dos objetos internos do PDF. Ver instruções em `data/README.md`.
-
-## Escolha da imagem VOC2012
-
-Avaliação visual de 14 candidatos em [catálogo de opções](docs/catalogo_voc2012/LEIA-ME.md). Escolha confirmada: **`car_04` → `2009_003974.jpg`**, original VOC2012 disponível localmente (500 × 335, RGB, split de treino). Fonte, justificativa e reprodução em `data/README.md`. As fotos de prévia ficam locais, ignoradas pelo Git.
-
-## Frente da Born
-
-1. Executar `.venv/Scripts/python.exe -m unittest discover -s tests -v` para os testes matemáticos.
-2. Executar `.venv/Scripts/python.exe scripts/experimento_frequencia.py` para gerar os resultados.
-3. Abrir `notebooks/rascunhos/01_frequencia.ipynb`; executar do início ao fim.
-
-Resultados e interface para Gustavo: `resultados/frequencia/README.md`. Texto já incorporado em `relatorio/relatorio.md`; conteúdo da apresentação em `apresentacao/parte_born.md`.
-
-A integração parcial está em `notebooks/trabalho_m2_2.ipynb`, com as outras frentes marcadas como pendentes. Não enviar como trabalho completo antes de integrar e revisar essas etapas.
-
-Slides da frente da Born: `apresentacao/parte_born.pptx` (3 slides, editáveis). Roteiro de fala e perguntas em `apresentacao/parte_born.md`.
+- [VOC2012](https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/).
+- [NumPy: transformada de Fourier](https://numpy.org/doc/stable/reference/routines.fft.html).

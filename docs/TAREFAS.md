@@ -27,7 +27,3 @@
 - [ ] Revisar a frente de outro integrante
 - [ ] Ensaiar e compreender a implementação completa
 - [ ] Exportar relatório/slides PDF e enviar até 16/11 às 18h59
-
-Datas propostas: implementação inicial em 13/11; experimentos em 14/11; integração e ensaio em 15/11; meta interna de envio em 16/11 às 17h.
-
-Frente Born: texto e figuras disponíveis; conteúdo de slides em `apresentacao/parte_born.md`. Painéis de segmentação, integração completa e revisão da entrega aguardam as outras frentes. Born precisa revisar o código e ensaiar a explicação.

@@ -1,0 +1,7 @@
+metodo,imagem,regioes,precisao,revocacao,f1
+Watershed,Original,20,1.0,1.0,1.0
+Watershed,Ruidosa,9,0.888,0.55,0.679
+Watershed,Filtrada,11,0.891,0.557,0.685
+SLIC,Original,203,1.0,1.0,1.0
+SLIC,Ruidosa,148,0.469,0.697,0.561
+SLIC,Filtrada,206,0.662,0.829,0.736

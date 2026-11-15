@@ -81,7 +81,13 @@ def marcadores(gradiente, limiar, area_min):
     pequenos = areas < area_min
     pequenos[0] = False
     rotulos[pequenos[rotulos]] = 0
-    return np.unique(rotulos, return_inverse=True)[1].reshape(rotulos.shape)  # renumera 1..n
+    # Renumera somente regiões positivas. Quando toda a imagem é um marcador,
+    # não existe fundo 0 em unique: return_inverse o transformaria em fundo.
+    presentes = np.unique(rotulos)
+    presentes = presentes[presentes > 0]
+    mapa = np.zeros(len(areas), dtype=np.int32)
+    mapa[presentes] = np.arange(1, len(presentes) + 1)
+    return mapa[rotulos]
 
 
 def watershed(relevo, marcas):
@@ -95,6 +101,10 @@ def watershed(relevo, marcas):
     -1 se espalhava para os vizinhos ainda não rotulados. Aqui todo pixel recebe uma
     bacia e as fronteiras são calculadas depois, em `contornos`.
     """
+    if relevo.shape != marcas.shape:
+        raise ValueError('O relevo e os marcadores devem ter o mesmo formato.')
+    if not np.any(marcas > 0):
+        raise ValueError('Nenhum marcador positivo. Reduza frac_area ou ajuste o percentil dos marcadores.')
     h, w = relevo.shape
     altura = relevo.tolist()  # listas: mesmo motivo de rotular_componentes
     rotulos = marcas.tolist()

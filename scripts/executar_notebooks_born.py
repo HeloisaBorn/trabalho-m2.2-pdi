@@ -1,4 +1,4 @@
-"""Executa as duas versões da frente Born com o Python deste ambiente."""
+"""Executa as frentes Born/Gustavo e o notebook integrado com o Python deste ambiente."""
 from pathlib import Path
 import os
 import sys
@@ -20,7 +20,8 @@ os.environ['MPLCONFIGDIR']=str(config/'matplotlib')
 for folder in ['runtime','ipython','matplotlib']:
     (config/folder).mkdir(exist_ok=True)
 ksm=KernelSpecManager(kernel_dirs=[str(config/'kernels')],ensure_native_kernel=False)
-for path in ['notebooks/rascunhos/01_frequencia.ipynb','notebooks/trabalho_m2_2.ipynb']:
+paths = sys.argv[1:] or ['notebooks/rascunhos/01_frequencia.ipynb','notebooks/rascunhos/02_segmentacao.ipynb','notebooks/trabalho_m2_2.ipynb']
+for path in paths:
     target=root/path
     nb=nbformat.read(target,as_version=4)
     print('Iniciando:',path,flush=True)

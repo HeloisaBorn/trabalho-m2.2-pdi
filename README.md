@@ -9,7 +9,7 @@ Disciplina: Processamento de Imagens — Professor Felipe Viel — Univali.
 | Integrante | Responsabilidade | Arquivos |
 |---|---|---|
 | Heloisa Cavalcante Born | Ruído, filtragem na frequência, espectros, inversa e PSNR; integração do notebook | `src/frequencia.py`, `src/metricas.py`, `notebooks/rascunhos/01_frequencia.ipynb` |
-| Gustavo Corrêa de Mello | Watershed, SLIC e comparação de regiões e contornos | `notebooks/rascunhos/02_segmentacao.ipynb`; módulo `src/segmentacao.py` a implementar |
+| Gustavo Corrêa de Mello | Watershed, SLIC e comparação de regiões e contornos | `notebooks/rascunhos/02_segmentacao.ipynb`; módulo `src/segmentacao.py` |
 | João Paulo Jorge Aimi | Limiarização, morfologia, preenchimento e contagem própria; consolidação do relatório | `notebooks/rascunhos/03_celulas.ipynb`; módulos `src/morfologia.py` e `src/contagem.py` a implementar |
 
 ## Executar
@@ -24,12 +24,13 @@ python scripts/baixar_imagem_voc2012.py
 python -m jupyterlab
 ```
 
-Abrir `notebooks/rascunhos/01_frequencia.ipynb` para reproduzir a filtragem. O notebook principal, `notebooks/trabalho_m2_2.ipynb`, contém a integração parcial e identifica as etapas de segmentação e células ainda pendentes.
+Abrir `notebooks/trabalho_m2_2.ipynb` para executar a Parte 1 integrada: filtragem, Watershed, SLIC e comparação. O notebook identifica a Parte 2 (morfologia e contagem) ainda pendente. Os notebooks individuais permanecem em `notebooks/rascunhos/`.
 
 Também é possível gerar os resultados e executar os testes pelo terminal:
 
 ```powershell
 python scripts/experimento_frequencia.py
+python scripts/executar_notebooks_born.py
 python -m unittest discover -s tests -v
 ```
 
@@ -57,9 +58,10 @@ docs/             Tarefas de desenvolvimento
 
 - Imagem natural: **`2009_003974.jpg`**, VOC2012, RGB 500 × 335, conjunto de treino. Fonte, justificativa e reprodução em [dados](data/README.md).
 - As duas imagens da parte morfológica estão vinculadas na mesma documentação.
-- Resultados de filtragem e instruções para usar os arrays na segmentação: [resultados](resultados/frequencia/README.md).
+- Resultados da filtragem: [instruções e arrays](resultados/frequencia/README.md).
+- Comparação integrada: `resultados/comparacao_parte1.csv`; figuras de segmentação em `resultados/segmentacao/`.
 - Relatório: [texto](relatorio/relatorio.md).
-- Slides disponíveis da filtragem: `apresentacao/parte_born.pptx`.
+- Slides disponíveis: `apresentacao/parte_born.pptx` e `apresentacao/parte_gustavo.pptx`.
 
 ## Desenvolvimento
 

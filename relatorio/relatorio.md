@@ -32,7 +32,7 @@ Foram feitas duas adaptações ao exemplo da disciplina. Primeiro, a distância 
 
 **Método de comparação.** O enunciado pede a comparação do número de regiões e dos contornos em relação à original. Como a imagem não tem máscara de segmentação declarada (`segmented=0`), a referência de cada método é a sua própria segmentação da imagem original limpa. A medida resultante é de **estabilidade frente ao ruído e à filtragem**, não de acerto em relação a uma segmentação humana. Os contornos foram comparados por precisão e revocação com tolerância de 2 pixels, como no benchmark BSDS (Martin et al., 2004): um pixel de contorno é considerado correspondido se houver contorno do outro mapa a até 2 pixels, verificado por dilatação binária própria com elemento quadrado 5 × 5. A precisão é a fração do contorno obtido que existe na referência (baixa indica bordas falsas); a revocação é a fração da referência reencontrada (baixa indica bordas perdidas); o F1 é a média harmônica das duas. A comparação visual sobrepõe os contornos às imagens e, num recorte da frente do carro, colore cada pixel de contorno conforme coincida com a referência, seja falso ou tenha sido perdido.
 
-As funções estão em `src/segmentacao.py` e foram verificadas por 10 testes com entradas de resposta conhecida (`tests/test_segmentacao.py`): degrau preto/branco para o gradiente, duas bacias separadas por uma crista para a inundação, imagem de duas cores para o SLIC, pixel isolado para a conectividade e fronteira deslocada de 1 pixel para a tolerância da métrica.
+As funções estão em `src/segmentacao.py` e foram verificadas por 12 testes com entradas de resposta conhecida (`tests/test_segmentacao.py`): degrau preto/branco para o gradiente, duas bacias separadas por uma crista para a inundação, imagem de duas cores para o SLIC, pixel isolado para a conectividade, fronteira deslocada de 1 pixel para a tolerância da métrica, imagem uniforme e ausência de marcadores. Na imagem uniforme, o marcador único é preservado como rótulo 1 mesmo quando não há fundo. Caso o filtro de área elimine todos os marcadores, a execução informa um erro para ajustar os parâmetros, em vez de tratar um mapa sem rótulos como segmentação válida.
 ### 2.4 Morfologia e contagem — João Paulo
 Limiarização, elemento estruturante, fechamento, preenchimento, abertura e conectividade.
 
@@ -89,7 +89,7 @@ Na inspeção do painel e do recorte comum da roda dianteira, o filtro escolhido
 
 A tabela completa está em `resultados/frequencia/comparacao_filtros.csv`. Os arrays float64 em `entradas_segmentacao.npz` preservam os dados para Gustavo; os PNGs são cópias arredondadas para visualização. Parâmetros, versões e fonte estão em `parametros.json`.
 
-O ganho de PSNR mede restauração e **não demonstra melhoria de Watershed ou SLIC**. Essa conclusão depende das próximas etapas. A imagem escolhida não tem máscara de segmentação declarada; não se usa sua caixa de detecção como referência pixel a pixel.
+O ganho de PSNR mede restauração e, isoladamente, **não demonstra melhoria de Watershed ou SLIC**. A avaliação específica de estabilidade dos contornos está na seção 4.2. A imagem escolhida não tem máscara de segmentação declarada; não se usa sua caixa de detecção como referência pixel a pixel.
 
 ### 4.2 Segmentação — Gustavo, com montagem dos painéis pela Born
 Na imagem original, o Watershed produziu **20 regiões** e o SLIC, **203**. Cada método levou cerca de 1 s por imagem. A Tabela 1 resume as três condições; a referência de cada linha é a segmentação da original pelo mesmo método, por isso a original tem precisão, revocação e F1 iguais a 1.
@@ -124,7 +124,11 @@ No recorte da frente do carro, o Watershed ruidoso aparece predominantemente em 
 As duas imagens, máscaras e rótulos; tabela de contagem por etapa.
 
 ## 5. Discussão e limitações — todos
-Discutir falhas, sensibilidade e relações entre parâmetros e resultados, sem presumir melhoria.
+Na Parte 1, o ganho de restauração de 3,5053 dB acompanha um aumento de F1 de estabilidade de 0,561 para 0,736 no SLIC, mas apenas de 0,679 para 0,685 no Watershed. Os efeitos dependem do segmentador e não devem ser generalizados a outras imagens. A tabela conjunta está em `resultados/comparacao_parte1.csv` e no notebook principal.
+
+A comparação usa os mesmos hiperparâmetros, mas o valor numérico do limiar do Watershed é recalculado pelo percentil de cada entrada. Assim, o resultado inclui a resposta desse procedimento adaptativo ao ruído. No zoom, as cores indicam coincidência exata entre pixels de contorno; as métricas da tabela aceitam deslocamentos de até 2 pixels.
+
+Completar a discussão da Parte 2 quando os resultados de morfologia e contagem estiverem disponíveis.
 
 **Segmentação (Gustavo).** Watershed e SLIC respondem a perguntas diferentes. No Watershed, o número de regiões é determinado pelo conteúdo da imagem (quantos vales planos existem); no SLIC, é um parâmetro, e o resultado é uma pré-segmentação em superpixels de tamanho semelhante, adequada para ser agrupada por outro algoritmo. Os outros métodos vistos na disciplina não atenderiam à comparação pedida nesta imagem: a limiarização de Otsu separa apenas por intensidade e gera regiões desconexas, e um único limiar não separa carroceria azul, pneus, vidros, reflexos e fundo claro; o k-means apenas por cor agrupa pixels distantes de mesma cor, problema que o SLIC resolve ao incluir a posição na distância; o detector de Canny produz bordas que não se fecham em regiões contáveis; e o crescimento de regiões depende de sementes e limiar escolhidos manualmente, enquanto o Watershed com marcadores obtém as sementes e a ordem de crescimento do próprio relevo.
 

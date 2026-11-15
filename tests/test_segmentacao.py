@@ -12,6 +12,15 @@ from src.segmentacao import (comparar_contornos, contornos, dilatar, gradiente_s
 
 
 class WatershedTests(unittest.TestCase):
+    def test_imagem_uniforme_tem_uma_bacia(self):
+        _, marcas, rotulos = segmentar_watershed(np.full((20, 20), 0.5))
+        np.testing.assert_array_equal(marcas, np.ones((20, 20)))
+        np.testing.assert_array_equal(rotulos, np.ones((20, 20)))
+
+    def test_sem_marcador_nao_retorna_fundo_como_regiao(self):
+        with self.assertRaisesRegex(ValueError, 'Nenhum marcador'):
+            watershed(np.zeros((5, 5)), np.zeros((5, 5), dtype=np.int32))
+
     def test_gradiente_degrau(self):
         # Metade preta, metade branca: o gradiente só aparece nas duas colunas da
         # transição; com padding de zeros apareceria também na moldura.

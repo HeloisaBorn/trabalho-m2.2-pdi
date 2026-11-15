@@ -1,0 +1,37 @@
+{
+  "imagem": "2009_003974.jpg",
+  "sha256_entrada": "a3690fa0aed129f1e392e70e3908a218fe45a3b431ed00548404ab94c27901b4",
+  "shape": [
+    335,
+    500,
+    3
+  ],
+  "intervalo": [
+    0,
+    1
+  ],
+  "dtype": "float64",
+  "sigma": 0.08,
+  "seed": 42,
+  "padding_reflect": 32,
+  "ruido": "N(0,sigma²), independente por canal, seguido de clipping em [0,1]",
+  "psnr_ruidosa_db": 22.613321452583026,
+  "mse_ruidosa": 0.005478578069941738,
+  "escolha": {
+    "filtro": "gaussiano",
+    "corte": 0.25,
+    "ordem": "",
+    "mse": 0.0024442264447737537,
+    "psnr_db": 26.118585614572897,
+    "ganho_db": 3.505264161989871
+  },
+  "criterio": "Maior PSNR na grade, com referência limpa conhecida. Ajuste demonstrativo nesta imagem/seed, sem validação independente.",
+  "comparabilidade": "Mesmo D0 não implica mesma resposta: Gaussiano H(D0)=exp(-1/2); Butterworth H(D0)=1/2.",
+  "residuo_imaginario_max": 4.805630676128216e-16,
+  "ambiente": {
+    "python": "3.12.14",
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "Pillow": "13.0.0"
+  }
+}

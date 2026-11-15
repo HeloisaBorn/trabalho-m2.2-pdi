@@ -24,7 +24,7 @@ Cada integrante entrega o código, as figuras, o texto e os slides da sua seçã
 
 ## Estado inicial
 
-Este repositório contém a organização e os roteiros de desenvolvimento. A imagem natural original escolhida já está disponível localmente. Os algoritmos, experimentos, duas imagens da Parte 2, resultados, relatório PDF e slides ainda precisam ser produzidos. Os notebooks iniciais não são a entrega pré-executada.
+Este repositório contém a organização e os roteiros de desenvolvimento. A frente da Born está implementada: ruído, filtros Gaussianos/Butterworth na frequência, inversa, PSNR, experimentos e figuras. O notebook da Born foi executado integralmente e está salvo com saídas; a integração final ainda depende de Watershed/SLIC e células. As duas imagens da Parte 2, relatório PDF e slides finais ainda estão pendentes. O notebook principal identifica explicitamente as partes pendentes e não constitui a entrega completa.
 
 ## Executar localmente
 
@@ -103,3 +103,15 @@ Links recuperados dos objetos internos do PDF. Ver instruções em `data/README.
 ## Escolha da imagem VOC2012
 
 Avaliação visual de 14 candidatos em [catálogo de opções](docs/catalogo_voc2012/LEIA-ME.md). Escolha confirmada: **`car_04` → `2009_003974.jpg`**, original VOC2012 disponível localmente (500 × 335, RGB, split de treino). Fonte, justificativa e reprodução em `data/README.md`. As fotos de prévia ficam locais, ignoradas pelo Git.
+
+## Frente da Born
+
+1. Executar `.venv/Scripts/python.exe -m unittest discover -s tests -v` para os testes matemáticos.
+2. Executar `.venv/Scripts/python.exe scripts/experimento_frequencia.py` para gerar os resultados.
+3. Abrir `notebooks/rascunhos/01_frequencia.ipynb`; executar do início ao fim.
+
+Resultados e interface para Gustavo: `resultados/frequencia/README.md`. Texto já incorporado em `relatorio/relatorio.md`; conteúdo da apresentação em `apresentacao/parte_born.md`.
+
+A integração parcial está em `notebooks/trabalho_m2_2.ipynb`, com as outras frentes marcadas como pendentes. Não enviar como trabalho completo antes de integrar e revisar essas etapas.
+
+Slides da frente da Born: `apresentacao/parte_born.pptx` (3 slides, editáveis). Roteiro de fala e perguntas em `apresentacao/parte_born.md`.

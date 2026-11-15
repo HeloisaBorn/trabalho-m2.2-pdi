@@ -1,9 +1,9 @@
 # Tarefas do grupo
 
 ## Born
-- [ ] Obter imagem natural e registrar fonte, seed e parâmetros
-- [ ] Implementar ruído, filtro na frequência, inversa e PSNR
-- [ ] Salvar espectros e comparar PSNR antes/depois
+- [x] Obter imagem natural e registrar fonte, seed e parâmetros
+- [x] Implementar ruído, filtro na frequência, inversa e PSNR
+- [x] Salvar espectros e comparar PSNR antes/depois
 - [ ] Montar tabelas e painéis com resultados enviados por Gustavo
 - [ ] Consolidar e executar `trabalho_m2_2.ipynb` em ambiente limpo
 - [ ] Atualizar instruções de execução e conferir entrega
@@ -29,3 +29,5 @@
 - [ ] Exportar relatório/slides PDF e enviar até 16/11 às 18h59
 
 Datas propostas: implementação inicial em 13/11; experimentos em 14/11; integração e ensaio em 15/11; meta interna de envio em 16/11 às 17h.
+
+Frente Born: texto e figuras disponíveis; conteúdo de slides em `apresentacao/parte_born.md`. Painéis de segmentação, integração completa e revisão da entrega aguardam as outras frentes. Born precisa revisar o código e ensaiar a explicação.

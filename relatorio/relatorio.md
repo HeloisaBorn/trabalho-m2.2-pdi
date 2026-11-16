@@ -34,7 +34,17 @@ Foram feitas duas adaptações ao exemplo da disciplina. Primeiro, a distância 
 
 As funções estão em `src/segmentacao.py` e foram verificadas por 12 testes com entradas de resposta conhecida (`tests/test_segmentacao.py`): degrau preto/branco para o gradiente, duas bacias separadas por uma crista para a inundação, imagem de duas cores para o SLIC, pixel isolado para a conectividade, fronteira deslocada de 1 pixel para a tolerância da métrica, imagem uniforme e ausência de marcadores. Na imagem uniforme, o marcador único é preservado como rótulo 1 mesmo quando não há fundo. Caso o filtro de área elimine todos os marcadores, a execução informa um erro para ajustar os parâmetros, em vez de tratar um mapa sem rótulos como segmentação válida.
 ### 2.4 Morfologia e contagem — João Paulo
-Limiarização, elemento estruturante, fechamento, preenchimento, abertura e conectividade.
+Foram usadas as duas imagens vinculadas no enunciado, obtidas do repositório do professor (`data/README.md`). A **Imagem 1** (`gap-region-filling.tif`, 512 × 512, cinza 8 bits) já é binária: anéis brancos com buraco central em fundo preto. A **Imagem 2** (`002f20ad-…png`, 1600 × 1200, RGB) é um esfregaço de sangue corado, com hemácias roxas de centro claro em fundo branco. As imagens são convertidas para float em [0,1] e para cinza pela mesma função própria da Parte 1 (pesos BT.601). A pipeline segue a ordem do enunciado: gaussiano leve, limiarização, fechamento, preenchimento de buracos, abertura e contagem.
+
+**Pré-processamento e limiarização.** O filtro gaussiano é aplicado por convolução própria separável (núcleo 1D nas linhas e depois nas colunas, raio $3\sigma$, borda replicada). Usou-se $\sigma=2$ na Imagem 2, para suavizar a textura interna das hemácias, e $\sigma=0$ na Imagem 1, que já é binária e só teria as bordas borradas. O limiar é o de Otsu, calculado sobre o histograma de 256 níveis: para cada nível $t$, os pixels se dividem nas classes $\le t$ e $> t$, e escolhe-se o $t$ que maximiza a variância entre classes, $\sigma_b^2(t)=\omega_0\,\omega_1\,(\mu_0-\mu_1)^2$, calculada para todos os níveis de uma vez com somas acumuladas. Como o histograma arredonda o cinza para o nível mais próximo, o limiar devolvido em [0,1] é $(t+0{,}5)/255$, de modo que a comparação `cinza > limiar` separe exatamente as mesmas classes. Na Imagem 1 o objeto é claro (pixels acima do limiar); na Imagem 2 é escuro (pixels abaixo).
+
+**Morfologia.** O elemento estruturante é um disco (pixels a até $r$ do centro), isotrópico e adequado a objetos arredondados. A dilatação é o OU lógico de cópias da máscara deslocadas por cada posição do elemento refletido, $A\oplus B$; a erosão é o E lógico das cópias deslocadas, $A\ominus B$. O laço percorre as posições do elemento, não os pixels. Fora da imagem conta como fundo na dilatação e como objeto na erosão, para que a moldura não corroa células cortadas pela borda; com isso o fechamento nunca remove pixels e a abertura nunca acrescenta. O **fechamento** ($(A\oplus B)\ominus B$, disco de raio 2 nas duas imagens) une fragmentos e fecha frestas menores que o elemento. A **abertura** ($(A\ominus B)\oplus B$, raio 2 na Imagem 1 e 4 na Imagem 2) remove partículas menores que o elemento.
+
+**Preenchimento de buracos.** Usou-se o preenchimento de regiões por dilatação condicional (Gonzalez e Woods): a partir dos pixels de fundo da borda da imagem, $X_k=(X_{k-1}\oplus B)\cap A^c$ até a estabilidade, com $B$ em cruz. O fundo é "inundado" de fora para dentro sem atravessar o objeto; o que não é alcançado é buraco e passa a ser objeto. O par de conectividades é complementar: objetos em 8-vizinhança e fundo em 4-vizinhança, para que a inundação não passe pela quina diagonal onde o objeto está conectado. Um buraco que toca a borda da imagem é, por definição, fundo e não é preenchido.
+
+**Contagem própria.** A rotulagem de componentes conexos percorre a imagem em ordem de leitura; ao encontrar um pixel de objeto sem rótulo, abre um rótulo novo e o propaga por busca em largura aos vizinhos de objeto (8-vizinhança). Cada pixel entra na fila uma única vez, então o custo é linear no número de pixels, e o número de rótulos é o número de objetos. Não se usaram funções prontas de rotulagem (`scipy.ndimage.label`, `cv2.connectedComponents` ou `skimage.measure.label`). A contagem é feita após cada etapa, para comparar antes e depois do gap-filling, e cada objeto final recebe uma cor e o seu número no centroide.
+
+As funções estão em `src/morfologia.py` e `src/contagem.py` e foram verificadas por 13 testes com resposta conhecida (`tests/test_morfologia.py`): dilatação e erosão contra a definição com elemento assimétrico (o que verifica a reflexão), fechamento que só acrescenta e abertura que só remove, abertura eliminando uma partícula de 1 pixel, fechamento unindo dois quadrados separados por 1 coluna, preenchimento de um buraco interno, losango ligado pelas quinas (preenchido com fundo em 4, não com fundo em 8), buraco aberto para fora que não é preenchido, Otsu em duas populações, diagonal com 1 objeto em 8-vizinhança e 4 em 4-vizinhança, renumeração após área mínima, medidas e a pipeline completa numa célula oca.
 
 ## 3. Códigos importantes
 Na frente da Born, `src/frequencia.py` implementa ruído, máscaras e filtragem; `src/metricas.py` implementa MSE e PSNR. O trecho central é:
@@ -69,7 +79,28 @@ d = np.sqrt(dc2 + (m / S) ** 2 * ds2)
 menor = d < dist[y0:y1, x0:x1]           # o pixel fica com o centro de menor D
 ```
 
-O notebook `notebooks/rascunhos/02_segmentacao.ipynb` executa os testes, os dois métodos e a comparação. Acrescentar aqui os trechos importantes da frente de células quando disponíveis.
+O notebook `notebooks/rascunhos/02_segmentacao.ipynb` executa os testes, os dois métodos e a comparação.
+
+Na frente de João Paulo, `src/morfologia.py` implementa gaussiano, Otsu, elemento estruturante, erosão, dilatação, fechamento, abertura e preenchimento; `src/contagem.py` implementa a rotulagem, medidas e cores. A dilatação percorre o elemento estruturante, não os pixels:
+
+```python
+p = np.pad(mascara, ((ry, ry), (rx, rx)), constant_values=False)
+saida = np.zeros((h, w), dtype=bool)
+for dy, dx in zip(*np.nonzero(ee[::-1, ::-1])):   # elemento refletido: A ⊕ B
+    saida |= p[dy:dy + h, dx:dx + w]               # OU da máscara deslocada
+```
+
+O preenchimento de buracos inunda o fundo a partir da borda até a estabilidade:
+
+```python
+while True:
+    novo = dilatar(inundado, b) & fundo    # X_k = (X_{k-1} ⊕ B) ∩ Aᶜ
+    if np.array_equal(novo, inundado):
+        return ~inundado                   # o que a água não alcança é objeto ou buraco
+    inundado = novo
+```
+
+O notebook `notebooks/rascunhos/03_celulas.ipynb` executa os testes, a pipeline nas duas imagens, a contagem por etapa e as figuras.
 
 ## 4. Resultados
 ### 4.1 Filtragem — Born
@@ -121,14 +152,43 @@ A filtragem recuperou principalmente o SLIC: o F1 passou de 0,561 para 0,736 e o
 
 No recorte da frente do carro, o Watershed ruidoso aparece predominantemente em verde (bordas da referência perdidas, como o contorno interno dos para-lamas), e o SLIC ruidoso, em vermelho (fronteiras serrilhadas no fundo e na carroceria). No SLIC filtrado, pares de linhas vermelha e verde lado a lado no fundo indicam fronteiras apenas deslocadas, efeito esperado numa região lisa em que a posição das fronteiras é arbitrária.
 ### 4.3 Células — João Paulo
-As duas imagens, máscaras e rótulos; tabela de contagem por etapa.
+O limiar de Otsu foi 0,500 na Imagem 1, que só tem os níveis 0 e 1, e 0,771 na Imagem 2, entre o fundo branco e as hemácias. A Tabela 2 mostra a contagem própria após cada etapa e a área total de objeto.
+
+| Imagem | Etapa | Objetos | Variação | Pixels de objeto |
+|---|---|---:|---:|---:|
+| Imagem 1 | Limiarizada | 17 | | 92.581 |
+| Imagem 1 | Fechamento | 17 | 0 | 92.653 |
+| Imagem 1 | Preenchimento | **16** | **−1** | 98.963 |
+| Imagem 1 | Abertura | 16 | 0 | 98.963 |
+| Imagem 2 | Limiarizada | 60 | | 466.102 |
+| Imagem 2 | Fechamento | 59 | −1 | 466.488 |
+| Imagem 2 | Preenchimento | 59 | 0 | 540.076 |
+| Imagem 2 | Abertura | **56** | −3 | 539.834 |
+
+*Tabela 2 — Contagem por etapa (8-vizinhança). Dados em `resultados/celulas/contagem_etapas.csv`.*
+
+Na **Imagem 1**, a única mudança de contagem ocorre no preenchimento, de 17 para 16. Depois da limiarização, um ponto branco de 5 pixels dentro do buraco de um anel é contado como objeto independente; ao preencher o buraco, ele é incorporado ao anel. O preenchimento acrescentou 6.310 pixels (os buracos centrais). Três anéis cortados pela borda permanecem ocos, porque o buraco deles toca a borda e é tratado como fundo. Dois anéis que se tocam formam um único objeto (rótulo 4 na figura de resultado), de modo que os 16 objetos correspondem a 17 anéis.
+
+Na **Imagem 2**, o preenchimento acrescentou 73.588 pixels, o centro claro das hemácias, sem alterar a contagem: uma hemácia com centro claro já era um anel, ou seja, um único componente. O fechamento uniu dois componentes (60 → 59), e a abertura removeu três partículas de 13 a 32 pixels, resíduos de corante (59 → 56). Na imagem final, a área mediana de um objeto é 9.252 pixels, e 8 objetos têm mais de 1,5 vez essa área (até 3,1 vezes): são hemácias encostadas que formam um só componente. Na figura de rótulos, aparecem com uma única cor cobrindo duas ou três células. A célula maior e escura no centro da imagem é contada como mais um objeto.
+
+![Falhas após a limiarização: em vermelho, os buracos que o preenchimento fecha](../resultados/celulas/falhas_limiarizacao.png)
+
+![Imagem 1: contagem após cada etapa](../resultados/celulas/etapas_imagem1.png)
+
+![Imagem 2: contagem após cada etapa](../resultados/celulas/etapas_imagem2.png)
+
+![Imagem 1: original, limiarização, morfologia e rótulos coloridos](../resultados/celulas/resultado_imagem1.png)
+
+![Imagem 2: original, limiarização, morfologia e rótulos coloridos](../resultados/celulas/resultado_imagem2.png)
 
 ## 5. Discussão e limitações — todos
 Na Parte 1, o ganho de restauração de 3,5053 dB acompanha um aumento de F1 de estabilidade de 0,561 para 0,736 no SLIC, mas apenas de 0,679 para 0,685 no Watershed. Os efeitos dependem do segmentador e não devem ser generalizados a outras imagens. A tabela conjunta está em `resultados/comparacao_parte1.csv` e no notebook principal.
 
 A comparação usa os mesmos hiperparâmetros, mas o valor numérico do limiar do Watershed é recalculado pelo percentil de cada entrada. Assim, o resultado inclui a resposta desse procedimento adaptativo ao ruído. No zoom, as cores indicam coincidência exata entre pixels de contorno; as métricas da tabela aceitam deslocamentos de até 2 pixels.
 
-Completar a discussão da Parte 2 quando os resultados de morfologia e contagem estiverem disponíveis.
+**Morfologia e contagem (João Paulo).** O efeito do gap-filling sobre a contagem depende do tipo de falha. Ele muda o número de objetos quando há um componente falso dentro de um buraco, como o ponto da Imagem 1, mas não quando o buraco só torna a célula oca, como nas hemácias da Imagem 2: um anel já é um único componente conexo. Nesse caso, o ganho do preenchimento está na área e na forma de cada célula (73.588 pixels recuperados), o que importaria para medidas por célula, e não no número. Na Imagem 2, a fonte principal de erro na contagem são as **células encostadas**, que nenhuma das operações pedidas separa: o fechamento tende a uni-las ainda mais (com raio 6, a contagem após o fechamento caiu de 60 para 51), e a abertura só as separaria se a ligação entre elas fosse mais estreita que o elemento. Separá-las exigiria, por exemplo, Watershed sobre a transformada de distância, que o enunciado deixa fora desta parte.
+
+As limitações são: (i) não há contagem manual de referência, então não é possível medir o erro absoluto; os 8 objetos grandes da Imagem 2 indicam apenas onde estão as fusões; (ii) os raios e o $\sigma$ foram escolhidos por inspeção visual nestas duas imagens; (iii) células cortadas pela borda contam como objetos inteiros e, se o buraco toca a borda, não são preenchidas; (iv) o limiar global de Otsu supõe iluminação uniforme e dois grupos de intensidade, o que vale para as duas imagens, mas não para microscopia com fundo irregular; (v) com $\sigma=2$, o tempo na Imagem 2 (1600 × 1200) foi de cerca de 4 s para a morfologia e 1 s por contagem.
 
 **Segmentação (Gustavo).** Watershed e SLIC respondem a perguntas diferentes. No Watershed, o número de regiões é determinado pelo conteúdo da imagem (quantos vales planos existem); no SLIC, é um parâmetro, e o resultado é uma pré-segmentação em superpixels de tamanho semelhante, adequada para ser agrupada por outro algoritmo. Os outros métodos vistos na disciplina não atenderiam à comparação pedida nesta imagem: a limiarização de Otsu separa apenas por intensidade e gera regiões desconexas, e um único limiar não separa carroceria azul, pneus, vidros, reflexos e fundo claro; o k-means apenas por cor agrupa pixels distantes de mesma cor, problema que o SLIC resolve ao incluir a posição na distância; o detector de Canny produz bordas que não se fecham em regiões contáveis; e o crescimento de regiões depende de sementes e limiar escolhidos manualmente, enquanto o Watershed com marcadores obtém as sementes e a ordem de crescimento do próprio relevo.
 
@@ -146,5 +206,8 @@ Relacionar evidências aos objetivos.
 - BEUCHER, S.; MEYER, F. The morphological approach to segmentation: the watershed transformation. In: DOUGHERTY, E. R. (ed.). *Mathematical Morphology in Image Processing*. New York: Marcel Dekker, 1993. p. 433–481.
 - ACHANTA, R. et al. SLIC superpixels compared to state-of-the-art superpixel methods. *IEEE Transactions on Pattern Analysis and Machine Intelligence*, v. 34, n. 11, p. 2274–2282, 2012.
 - MARTIN, D. R.; FOWLKES, C. C.; MALIK, J. Learning to detect natural image boundaries using local brightness, color, and texture cues. *IEEE Transactions on Pattern Analysis and Machine Intelligence*, v. 26, n. 5, p. 530–549, 2004.
+- Imagens da Parte 2: repositório do Professor Felipe Viel, `dataset/OperacaoMorfologia`. https://github.com/VielF/ColabProjects/tree/main/dataset/OperacaoMorfologia
+- GONZALEZ, R. C.; WOODS, R. E. *Digital Image Processing*. 4. ed. New York: Pearson, 2018. Cap. 9: Morphological Image Processing.
+- OTSU, N. A threshold selection method from gray-level histograms. *IEEE Transactions on Systems, Man, and Cybernetics*, v. 9, n. 1, p. 62–66, 1979.
 
 Completar as referências das outras frentes e padronizar a apresentação acadêmica antes da exportação final.

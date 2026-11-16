@@ -1,0 +1,9 @@
+imagem,etapa,objetos,pixels_objeto,variacao
+Imagem 1,Limiarizada,17,92581,
+Imagem 1,Fechamento,17,92653,0
+Imagem 1,Preenchimento,16,98963,-1
+Imagem 1,Abertura,16,98963,0
+Imagem 2,Limiarizada,60,466102,
+Imagem 2,Fechamento,59,466488,-1
+Imagem 2,Preenchimento,59,540076,0
+Imagem 2,Abertura,56,539834,-3

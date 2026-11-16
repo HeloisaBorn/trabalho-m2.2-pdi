@@ -1,0 +1,3 @@
+# Preserva os bytes dos documentos ao clonar no Windows.
+*.pdf binary
+*.pptx binary

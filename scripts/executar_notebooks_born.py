@@ -1,4 +1,4 @@
-"""Executa as frentes Born/Gustavo e o notebook integrado com o Python deste ambiente."""
+"""Executa os notebooks individuais e o notebook completo com o Python deste ambiente."""
 from pathlib import Path
 import os
 import sys
@@ -20,13 +20,13 @@ os.environ['MPLCONFIGDIR']=str(config/'matplotlib')
 for folder in ['runtime','ipython','matplotlib']:
     (config/folder).mkdir(exist_ok=True)
 ksm=KernelSpecManager(kernel_dirs=[str(config/'kernels')],ensure_native_kernel=False)
-paths = sys.argv[1:] or ['notebooks/rascunhos/01_frequencia.ipynb','notebooks/rascunhos/02_segmentacao.ipynb','notebooks/trabalho_m2_2.ipynb']
+paths = sys.argv[1:] or ['notebooks/rascunhos/01_frequencia.ipynb','notebooks/rascunhos/02_segmentacao.ipynb','notebooks/rascunhos/03_celulas.ipynb','notebooks/trabalho_m2_2.ipynb']
 for path in paths:
     target=root/path
     nb=nbformat.read(target,as_version=4)
     print('Iniciando:',path,flush=True)
     km=AsyncKernelManager(kernel_name='python3',kernel_spec_manager=ksm)
-    NotebookClient(nb,km=km,timeout=240,startup_timeout=40,kernel_name='python3',resources={'metadata':{'path':str(target.parent)}}).execute()
+    NotebookClient(nb,km=km,timeout=600,startup_timeout=40,kernel_name='python3',resources={'metadata':{'path':str(target.parent)}}).execute()
     nbformat.validate(nb)
     assert not any(o.output_type=='error' for c in nb.cells if c.cell_type=='code' for o in c.outputs)
     nbformat.write(nb,target)

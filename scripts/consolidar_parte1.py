@@ -1,4 +1,4 @@
-"""Integra os notebooks de frequência e segmentação, preservando as fontes."""
+"""Integra as duas partes do trabalho, preservando os notebooks individuais."""
 from pathlib import Path
 from copy import deepcopy
 import nbformat as nbf
@@ -9,11 +9,12 @@ ROOT = Path(__file__).resolve().parents[1]
 def consolidar():
     born = nbf.read(ROOT/'notebooks/rascunhos/01_frequencia.ipynb', as_version=4)
     gustavo = nbf.read(ROOT/'notebooks/rascunhos/02_segmentacao.ipynb', as_version=4)
+    joao = nbf.read(ROOT/'notebooks/rascunhos/03_celulas.ipynb', as_version=4)
     cells = [nbf.v4.new_markdown_cell('''# Trabalho M2.2 — Filtragem, segmentação e morfologia
 
-Heloisa Cavalcante Born, Gustavo Corrêa de Mello e João Paulo Jorge Aimi.
+Gustavo Corrêa de Mello, Heloisa Cavalcante Born e João Paulo Jorge Aimi.
 
-**Parte 1 integrada:** filtragem, Watershed, SLIC e comparação. **Parte 2 pendente:** morfologia e contagem de objetos. O relatório e os slides finais ainda dependem dessa etapa.
+**Parte 1:** filtragem, Watershed, SLIC e comparação. **Parte 2:** limiarização, morfologia, preenchimento de buracos e contagem própria nas duas imagens do enunciado.
 
 Executar do início ao fim. A imagem e a pasta de saída são definidas na seção de filtragem; a segmentação utiliza os mesmos arrays, sem gerar novo ruído.
 ''')]
@@ -52,9 +53,15 @@ texto = [f"| {r['metodo']} | {r['imagem']} | {r['psnr_db']:.2f} | {r['regioes']}
 display(Markdown(cabecalho + "\\n".join(texto)))
 print("Tabela integrada:", destino)
 '''))
-    cells.append(nbf.v4.new_markdown_cell('''# Parte 2 — Morfologia e contagem (João Paulo)
+    cells.append(nbf.v4.new_markdown_cell('# Parte 2 — Morfologia e contagem (João Paulo)\n\nContagem de componentes conectados nas imagens do enunciado; objetos encostados podem representar mais de uma célula.'))
+    cells.extend(deepcopy(joao.cells[1:]))
+    cells.append(nbf.v4.new_markdown_cell('''# Conclusões
 
-Pendente de integração. Usar as duas imagens indicadas no enunciado, mostrar limiarização, fechamento, preenchimento, abertura e rótulos coloridos; comparar a contagem própria nas etapas. Não confundir esta pendência com a Parte 1 já implementada.
+O filtro Gaussiano escolhido elevou o PSNR de 22,61 para 26,12 dB. O F1 de estabilidade de contornos aumentou de 0,561 para 0,736 no SLIC e de 0,679 para 0,685 no Watershed. Melhor restauração não implica melhora equivalente em todos os segmentadores.
+
+Na Parte 2, as contagens passaram de 17 para 16 objetos na Imagem 1 e de 60 para 56 na Imagem 2. O preenchimento isolado mudou a contagem apenas na primeira; na segunda corrigiu principalmente áreas e formas. Não há contagem humana de referência e componentes de células encostadas permanecem unidos.
+
+Os resultados são específicos das imagens, parâmetros e seed utilizados. As implementações próprias e as intermediárias permitem examinar tanto os ganhos quanto as falhas dos métodos.
 '''))
     for i, cell in enumerate(cells):
         cell.id = f'integrado-{i:03d}'
@@ -64,7 +71,7 @@ Pendente de integração. Usar as duas imagens indicadas no enunciado, mostrar l
     nb = nbf.v4.new_notebook(cells=cells, metadata=deepcopy(born.metadata))
     nbf.validate(nb)
     nbf.write(nb, ROOT/'notebooks/trabalho_m2_2.ipynb')
-    print('Parte 1 integrada no notebook principal.')
+    print('Trabalho completo integrado no notebook principal.')
 
 
 if __name__ == '__main__':

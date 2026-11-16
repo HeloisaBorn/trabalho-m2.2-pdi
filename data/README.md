@@ -1,6 +1,6 @@
 # Imagens e fontes
 
-Os quatro URLs abaixo foram recuperados dos objetos internos do `Trabalho M2.pdf`, página 2.
+Imagens utilizadas no trabalho, conforme as fontes indicadas no enunciado.
 
 ## Parte 1 — imagem escolhida: carro azul (VOC2012)
 
@@ -21,7 +21,7 @@ Escolha confirmada: **`2009_003974.jpg`**, correspondente à prévia **`car_04`*
 Para obter a mesma imagem em outro computador, executar na raiz do projeto:
 
 ```powershell
-python scripts/baixar_imagem_voc2012.py
+python scripts/baixar_dados.py
 ```
 
 O script baixa somente os bytes do JPEG no pacote oficial e valida o SHA-256. Se o servidor deixar de oferecer leitura parcial, baixar o pacote e extrair o membro acima. A imagem local permanece ignorada pelo Git; o script e os metadados permitem reproduzir a obtenção.

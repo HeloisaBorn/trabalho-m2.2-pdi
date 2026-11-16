@@ -1,13 +1,29 @@
-# Projeto M2 — Filtragem na frequência, morfologia e segmentação
+# Projeto M2.2 — Filtragem na frequência, morfologia e segmentação
 
-Autores: Heloisa Cavalcante Born, Gustavo Corrêa de Mello e João Paulo Jorge Aimi. Completar curso e identificação acadêmica.
+Universidade do Vale do Itajaí — Curso de Ciência da Computação
+
+Disciplina: Processamento de Imagens. Professor: Felipe Viel.
+
+Autores: Gustavo Corrêa de Mello, Heloisa Cavalcante Born e João Paulo Jorge Aimi.
+
+## Resumo
+
+Este trabalho compara os efeitos da filtragem no domínio da frequência sobre a segmentação de uma imagem natural e aplica morfologia binária à contagem de objetos em duas imagens indicadas no enunciado. Na Parte 1, ruído gaussiano controlado degrada uma imagem do VOC2012; máscaras Gaussianas e Butterworth próprias antecedem Watershed e SLIC. O filtro selecionado eleva o PSNR de 22,61 para 26,12 dB. O F1 de estabilidade de contornos melhora de 0,561 para 0,736 no SLIC e de 0,679 para 0,685 no Watershed. Na Parte 2, limiarização, fechamento, preenchimento de buracos e abertura produzem contagens finais de 16 e 56 componentes. Os resultados mostram ganhos de restauração e correção de formas, mas também limitações na preservação de contornos e na separação de objetos encostados. As implementações e os resultados intermediários são apresentados em notebook pré-executado.
+
+Palavras-chave: filtragem na frequência; Watershed; SLIC; morfologia; componentes conectados.
 
 ## 1. Enunciado e contexto
-Apresentar problema, objetivos e requisitos. Referenciar o enunciado da disciplina.
+O projeto M2.2 da disciplina solicita duas abordagens complementares de processamento de imagens. A primeira investiga como o ruído e a filtragem na frequência afetam a segmentação de uma imagem natural com Watershed e SLIC. A segunda utiliza limiarização e operações morfológicas para corrigir falhas em imagens binárias e examinar sua influência na contagem de objetos.
+
+O objetivo é relacionar as escolhas de processamento aos resultados quantitativos e visuais, sem presumir que toda filtragem ou operação morfológica melhora a saída. Para isso, comparam-se intensidades, regiões, contornos e contagens por etapa. O desenvolvimento utiliza Python e implementações próprias das máscaras, operações pontuais, morfologia, métricas e contagem; NumPy fornece as operações numéricas e a FFT. Foram mantidos os métodos e as imagens definidos no enunciado, inclusive quando revelam limitações como células encostadas.
 
 ## 2. Materiais e metodologia
 ### 2.1 Dados e reprodutibilidade — todos
-Fontes das três imagens, ambiente, seed, parâmetros e convenções.
+A Parte 1 usa o JPEG original `2009_003974.jpg`, 500 × 335 pixels, RGB, pertencente ao conjunto Main/train do pacote VOC2012. A escolha favorece a inspeção de um objeto grande sobre fundo relativamente uniforme. O arquivo foi extraído sem alteração do pacote oficial e sua integridade é registrada por SHA-256. A identificação da prévia `car_04` foi confirmada por anotação e inspeção visual. O XML indica ausência de máscara de segmentação, razão pela qual os contornos da imagem limpa são utilizados como referência de estabilidade de cada método, não como verdade humana.
+
+A Parte 2 utiliza exatamente os dois arquivos vinculados no enunciado: `gap-region-filling.tif`, uma imagem binária de 512 × 512 pixels com anéis e falhas, e `002f20ad-2ace-499c-9335-c9080bc3e6b5.png`, uma imagem RGB de 1600 × 1200 pixels de esfregaço de sangue. As fontes e instruções de obtenção estão em `data/README.md`; o script `scripts/baixar_dados.py` verifica o checksum das três entradas.
+
+O ambiente de referência utiliza Python 3.12.14, NumPy 2.5.4, Matplotlib 3.11.2 e Pillow 13.0.0, com versões das dependências fixadas em `requirements.txt`. Imagens são representadas por arrays float64 em [0,1], máscaras por booleanos e rótulos por inteiros com zero reservado ao fundo. As comparações da Parte 1 usam uma única realização de ruído, com seed 42. Os parâmetros específicos são descritos nas subseções seguintes. Todas as etapas são executadas sequencialmente no notebook `notebooks/trabalho_m2_2.ipynb`.
 ### 2.2 Filtragem na frequência — Born
 A imagem original VOC2012 `2009_003974.jpg`, RGB de 500 × 335 pixels, foi convertida manualmente de inteiros de 8 bits para float64 em [0,1], sem redimensionamento. Adicionou-se ruído gaussiano de média zero e desvio padrão 0,08, independente por canal, com gerador NumPy e seed 42. Os valores foram limitados a [0,1]; portanto, o ruído efetivo sofre alteração perto dos extremos.
 
@@ -86,7 +102,7 @@ Na frente de João Paulo, `src/morfologia.py` implementa gaussiano, Otsu, elemen
 ```python
 p = np.pad(mascara, ((ry, ry), (rx, rx)), constant_values=False)
 saida = np.zeros((h, w), dtype=bool)
-for dy, dx in zip(*np.nonzero(ee[::-1, ::-1])):   # elemento refletido: A ⊕ B
+for dy, dx in zip(*np.nonzero(ee[::-1, ::-1])):   # elemento refletido na dilatacao
     saida |= p[dy:dy + h, dx:dx + w]               # OU da máscara deslocada
 ```
 
@@ -94,7 +110,7 @@ O preenchimento de buracos inunda o fundo a partir da borda até a estabilidade:
 
 ```python
 while True:
-    novo = dilatar(inundado, b) & fundo    # X_k = (X_{k-1} ⊕ B) ∩ Aᶜ
+    novo = dilatar(inundado, b) & fundo    # dilatacao condicional no fundo
     if np.array_equal(novo, inundado):
         return ~inundado                   # o que a água não alcança é objeto ou buraco
     inundado = novo
@@ -169,7 +185,7 @@ O limiar de Otsu foi 0,500 na Imagem 1, que só tem os níveis 0 e 1, e 0,771 na
 
 Na **Imagem 1**, a única mudança de contagem ocorre no preenchimento, de 17 para 16. Depois da limiarização, um ponto branco de 5 pixels dentro do buraco de um anel é contado como objeto independente; ao preencher o buraco, ele é incorporado ao anel. O preenchimento acrescentou 6.310 pixels (os buracos centrais). Três anéis cortados pela borda permanecem ocos, porque o buraco deles toca a borda e é tratado como fundo. Dois anéis que se tocam formam um único objeto (rótulo 4 na figura de resultado), de modo que os 16 objetos correspondem a 17 anéis.
 
-Na **Imagem 2**, o preenchimento acrescentou 73.588 pixels, o centro claro das hemácias, sem alterar a contagem: uma hemácia com centro claro já era um anel, ou seja, um único componente. O fechamento uniu dois componentes (60 → 59), e a abertura removeu três partículas de 13 a 32 pixels, resíduos de corante (59 → 56). Na imagem final, a área mediana de um objeto é 9.252 pixels, e 8 objetos têm mais de 1,5 vez essa área (até 3,1 vezes): são hemácias encostadas que formam um só componente. Na figura de rótulos, aparecem com uma única cor cobrindo duas ou três células. A célula maior e escura no centro da imagem é contada como mais um objeto.
+Na **Imagem 2**, o preenchimento acrescentou 73.588 pixels, o centro claro das hemácias, sem alterar a contagem: uma hemácia com centro claro já era um anel, ou seja, um único componente. O fechamento uniu dois componentes (60 → 59), e a abertura removeu três partículas de 13 a 32 pixels, resíduos de corante (59 → 56). Na imagem final, a área mediana de um objeto é 9.252 pixels, e 8 objetos têm mais de 1,5 vez essa área (até 3,1 vezes), sinalizando candidatos a aglomerados. O critério de área é heurístico e não comprova, sozinho, quantas células compõem cada objeto. Na figura de rótulos, aparecem com uma única cor cobrindo duas ou três células. A célula maior e escura no centro da imagem é contada como mais um objeto.
 
 ![Falhas após a limiarização: em vermelho, os buracos que o preenchimento fecha](../resultados/celulas/falhas_limiarizacao.png)
 
@@ -186,16 +202,20 @@ Na Parte 1, o ganho de restauração de 3,5053 dB acompanha um aumento de F1 de 
 
 A comparação usa os mesmos hiperparâmetros, mas o valor numérico do limiar do Watershed é recalculado pelo percentil de cada entrada. Assim, o resultado inclui a resposta desse procedimento adaptativo ao ruído. No zoom, as cores indicam coincidência exata entre pixels de contorno; as métricas da tabela aceitam deslocamentos de até 2 pixels.
 
-**Morfologia e contagem (João Paulo).** O efeito do gap-filling sobre a contagem depende do tipo de falha. Ele muda o número de objetos quando há um componente falso dentro de um buraco, como o ponto da Imagem 1, mas não quando o buraco só torna a célula oca, como nas hemácias da Imagem 2: um anel já é um único componente conexo. Nesse caso, o ganho do preenchimento está na área e na forma de cada célula (73.588 pixels recuperados), o que importaria para medidas por célula, e não no número. Na Imagem 2, a fonte principal de erro na contagem são as **células encostadas**, que nenhuma das operações pedidas separa: o fechamento tende a uni-las ainda mais (com raio 6, a contagem após o fechamento caiu de 60 para 51), e a abertura só as separaria se a ligação entre elas fosse mais estreita que o elemento. Separá-las exigiria, por exemplo, Watershed sobre a transformada de distância, que o enunciado deixa fora desta parte.
+**Morfologia e contagem (João Paulo).** O efeito do gap-filling sobre a contagem depende do tipo de falha. Ele muda o número de objetos quando há um componente falso dentro de um buraco, como o ponto da Imagem 1, mas não quando o buraco só torna a célula oca, como nas hemácias da Imagem 2: um anel já é um único componente conexo. Nesse caso, o ganho do preenchimento está na área e na forma de cada célula (73.588 pixels recuperados), o que importaria para medidas por célula, e não no número. Na Imagem 2, a fonte principal de erro na contagem são as **células encostadas**, que nenhuma das operações pedidas separa: o fechamento tende a uni-las ainda mais (em teste de sensibilidade registrado pelo grupo com raio 6, a contagem após o fechamento caiu de 60 para 51), e a abertura só as separaria se a ligação entre elas fosse mais estreita que o elemento. Separá-las exigiria, por exemplo, Watershed sobre a transformada de distância, que o enunciado deixa fora desta parte.
 
-As limitações são: (i) não há contagem manual de referência, então não é possível medir o erro absoluto; os 8 objetos grandes da Imagem 2 indicam apenas onde estão as fusões; (ii) os raios e o $\sigma$ foram escolhidos por inspeção visual nestas duas imagens; (iii) células cortadas pela borda contam como objetos inteiros e, se o buraco toca a borda, não são preenchidas; (iv) o limiar global de Otsu supõe iluminação uniforme e dois grupos de intensidade, o que vale para as duas imagens, mas não para microscopia com fundo irregular; (v) com $\sigma=2$, o tempo na Imagem 2 (1600 × 1200) foi de cerca de 4 s para a morfologia e 1 s por contagem.
+As limitações são: (i) não há contagem manual de referência, então não é possível medir o erro absoluto; os 8 objetos grandes da Imagem 2 são apenas candidatos a aglomerados; (ii) os raios e o $\sigma$ foram escolhidos por inspeção visual nestas duas imagens; (iii) células cortadas pela borda contam como objetos inteiros e, se o buraco toca a borda, não são preenchidas; (iv) o limiar global de Otsu supõe iluminação uniforme e dois grupos de intensidade, o que vale para as duas imagens, mas não para microscopia com fundo irregular; (v) com $\sigma=2$, o tempo na Imagem 2 (1600 × 1200) foi de cerca de 4 s para a morfologia e 1 s por contagem.
 
 **Segmentação (Gustavo).** Watershed e SLIC respondem a perguntas diferentes. No Watershed, o número de regiões é determinado pelo conteúdo da imagem (quantos vales planos existem); no SLIC, é um parâmetro, e o resultado é uma pré-segmentação em superpixels de tamanho semelhante, adequada para ser agrupada por outro algoritmo. Os outros métodos vistos na disciplina não atenderiam à comparação pedida nesta imagem: a limiarização de Otsu separa apenas por intensidade e gera regiões desconexas, e um único limiar não separa carroceria azul, pneus, vidros, reflexos e fundo claro; o k-means apenas por cor agrupa pixels distantes de mesma cor, problema que o SLIC resolve ao incluir a posição na distância; o detector de Canny produz bordas que não se fecham em regiões contáveis; e o crescimento de regiões depende de sementes e limiar escolhidos manualmente, enquanto o Watershed com marcadores obtém as sementes e a ordem de crescimento do próprio relevo.
 
 As principais limitações são: (i) sem gabarito, a métrica mede estabilidade em relação à segmentação da original, não acerto; uma borda errada na original também é tratada como referência; (ii) no fundo liso, as fronteiras do SLIC são arbitrárias e qualquer perturbação as desloca, o que penaliza a precisão mesmo onde não há objeto; (iii) foi usada uma única imagem e uma única realização do ruído; (iv) os parâmetros (percentil 75, área 0,1%, $K=200$, $m=20$) foram escolhidos por inspeção visual e não otimizados; (v) a métrica não faz o pareamento um-para-um do BSDS, de modo que um contorno espesso pode corresponder mais de uma vez; (vi) os laços em Python tornam imagens acima de cerca de 1000 pixels de lado lentas (vários segundos por método).
 
 ## 6. Conclusão — todos
-Relacionar evidências aos objetivos.
+Os experimentos demonstram que a eficácia do pré-processamento depende da medida e da etapa de análise. Na imagem natural utilizada, o filtro Gaussiano de corte 0,25 ciclos/pixel reduziu o erro de restauração, com ganho de 3,5053 dB no PSNR. Essa escolha recuperou parte da estabilidade dos contornos do SLIC, cujo F1 passou de 0,561 para 0,736, mas pouco alterou o Watershed, de 0,679 para 0,685. Portanto, escolher um filtro por PSNR não garante melhora equivalente em todos os segmentadores.
+
+Na Parte 2, o preenchimento de buracos corrigiu a área e a forma dos objetos. Na Imagem 1, ele também incorporou um pequeno componente interno a um anel, reduzindo a contagem de 17 para 16. Na Imagem 2, o preenchimento manteve 59 objetos após o fechamento, enquanto a abertura reduziu o total para 56 ao remover pequenas partículas. A contagem final corresponde a componentes conectados e pode subestimar o número de células quando há contato entre elas.
+
+As conclusões se restringem às três imagens, aos parâmetros e à realização de ruído examinados. Não há gabarito humano de segmentação nem contagem manual validada para calcular acurácia absoluta. Como continuidade, seria possível ampliar as imagens e seeds, avaliar sensibilidade de parâmetros e incorporar referências humanas. Nesta entrega, as intermediárias, métricas e testes tornam explícitos tanto os efeitos desejados quanto as falhas observadas.
 
 ## Referências
 - Enunciado do Trabalho M2 e material de filtragem no domínio da frequência, Professor Felipe Viel, disciplina de Processamento de Imagens.
@@ -209,5 +229,3 @@ Relacionar evidências aos objetivos.
 - Imagens da Parte 2: repositório do Professor Felipe Viel, `dataset/OperacaoMorfologia`. https://github.com/VielF/ColabProjects/tree/main/dataset/OperacaoMorfologia
 - GONZALEZ, R. C.; WOODS, R. E. *Digital Image Processing*. 4. ed. New York: Pearson, 2018. Cap. 9: Morphological Image Processing.
 - OTSU, N. A threshold selection method from gray-level histograms. *IEEE Transactions on Systems, Man, and Cybernetics*, v. 9, n. 1, p. 62–66, 1979.
-
-Completar as referências das outras frentes e padronizar a apresentação acadêmica antes da exportação final.

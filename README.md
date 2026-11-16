@@ -8,9 +8,9 @@ Disciplina: Processamento de Imagens — Professor Felipe Viel — Univali.
 
 | Integrante | Responsabilidade | Arquivos |
 |---|---|---|
-| Heloisa Cavalcante Born | Ruído, filtragem na frequência, espectros, inversa e PSNR; integração do notebook | `src/frequencia.py`, `src/metricas.py`, `notebooks/rascunhos/01_frequencia.ipynb` |
 | Gustavo Corrêa de Mello | Watershed, SLIC e comparação de regiões e contornos | `notebooks/rascunhos/02_segmentacao.ipynb`; módulo `src/segmentacao.py` |
-| João Paulo Jorge Aimi | Limiarização, morfologia, preenchimento e contagem própria; consolidação do relatório | `notebooks/rascunhos/03_celulas.ipynb`; módulos `src/morfologia.py` e `src/contagem.py` a implementar |
+| Heloisa Cavalcante Born | Ruído, filtragem na frequência, espectros, inversa e PSNR; integração do notebook | `src/frequencia.py`, `src/metricas.py`, `notebooks/rascunhos/01_frequencia.ipynb` |
+| João Paulo Jorge Aimi | Limiarização, morfologia, preenchimento e contagem própria; consolidação do relatório | `notebooks/rascunhos/03_celulas.ipynb`; módulos `src/morfologia.py` e `src/contagem.py` |
 
 ## Executar
 
@@ -20,17 +20,17 @@ Ambiente utilizado: Python 3.12. Dependências em `requirements.txt`.
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts/baixar_imagem_voc2012.py
+python scripts/baixar_dados.py
 python -m jupyterlab
 ```
 
-Abrir `notebooks/trabalho_m2_2.ipynb` para executar a Parte 1 integrada: filtragem, Watershed, SLIC e comparação. O notebook identifica a Parte 2 (morfologia e contagem) ainda pendente. Os notebooks individuais permanecem em `notebooks/rascunhos/`.
+Abrir `notebooks/trabalho_m2_2.ipynb` e executar do início ao fim: ele reúne filtragem, Watershed, SLIC, morfologia e contagem. A versão de entrega está salva com saídas. Os notebooks individuais permanecem em `notebooks/rascunhos/`.
 
 Também é possível gerar os resultados e executar os testes pelo terminal:
 
 ```powershell
 python scripts/experimento_frequencia.py
-python scripts/executar_notebooks_born.py
+python scripts/executar_notebooks_born.py notebooks/trabalho_m2_2.ipynb
 python -m unittest discover -s tests -v
 ```
 
@@ -57,11 +57,14 @@ docs/             Tarefas de desenvolvimento
 ## Dados e resultados
 
 - Imagem natural: **`2009_003974.jpg`**, VOC2012, RGB 500 × 335, conjunto de treino. Fonte, justificativa e reprodução em [dados](data/README.md).
-- As duas imagens da parte morfológica estão vinculadas na mesma documentação.
+- As duas imagens da parte morfológica estão vinculadas na mesma documentação e são obtidas pelo mesmo script de dados.
 - Resultados da filtragem: [instruções e arrays](resultados/frequencia/README.md).
 - Comparação integrada: `resultados/comparacao_parte1.csv`; figuras de segmentação em `resultados/segmentacao/`.
-- Relatório: [texto](relatorio/relatorio.md).
-- Slides disponíveis: `apresentacao/parte_born.pptx` e `apresentacao/parte_gustavo.pptx`.
+- Morfologia e contagem: `resultados/celulas/contagem_etapas.csv` e figuras em `resultados/celulas/`.
+- Relatório: [PDF](relatorio/relatorio.pdf) e [texto-fonte](relatorio/relatorio.md).
+- Apresentação conjunta: [PowerPoint](apresentacao/apresentacao_final.pptx) e [PDF](apresentacao/apresentacao_final.pdf). As versões individuais foram preservadas como fontes.
+
+O PowerPoint reúne 13 slides principais e 2 slides de apoio ocultos; o PDF contém os 13 principais. Para editar o conteúdo, usar o PowerPoint.
 
 ## Desenvolvimento
 

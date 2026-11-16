@@ -33,7 +33,15 @@ O script baixa somente os bytes do JPEG no pacote oficial e valida o SHA-256. Se
 | Imagem 1 | `gap-region-filling.tif` | [GitHub do professor](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/gap-region-filling.tif) |
 | Imagem 2 | `002f20ad-2ace-499c-9335-c9080bc3e6b5.png` | [GitHub do professor](https://github.com/VielF/ColabProjects/blob/main/dataset/OperacaoMorfologia/002f20ad-2ace-499c-9335-c9080bc3e6b5.png) |
 
-Abrir cada página, usar a opção de baixar o arquivo original e salvar em `data/originais/` com esses nomes. Não salvar o HTML da página como imagem. Os arquivos ainda não foram baixados.
+Para baixar os arquivos originais (não o HTML da página) em `data/originais/`, executar na raiz do projeto:
+
+```powershell
+curl.exe -L -o data/originais/gap-region-filling.tif https://raw.githubusercontent.com/VielF/ColabProjects/main/dataset/OperacaoMorfologia/gap-region-filling.tif
+curl.exe -L -o data/originais/002f20ad-2ace-499c-9335-c9080bc3e6b5.png https://raw.githubusercontent.com/VielF/ColabProjects/main/dataset/OperacaoMorfologia/002f20ad-2ace-499c-9335-c9080bc3e6b5.png
+```
+
+- Imagem 1: TIFF em cinza 8 bits, 512 × 512, já binária (só 0 e 255). Anéis brancos com buraco central em fundo preto; alguns cortados pela borda e dois encostados.
+- Imagem 2: PNG RGB, 1600 × 1200. Esfregaço de sangue corado: hemácias roxas, com centro claro, em fundo branco, e uma célula maior escura no centro.
 
 O texto cita BBBC006 como exemplo; usar os dois arquivos efetivamente vinculados, sem substituí-los automaticamente. Antes de interpretar o resultado como contagem de células, examinar o conteúdo real de cada imagem e discutir eventuais limitações.
 

@@ -64,7 +64,7 @@ docs/             Tarefas de desenvolvimento
 - Relatório: [PDF](relatorio/relatorio.pdf) e [texto-fonte](relatorio/relatorio.md).
 - Apresentação conjunta: [PowerPoint](apresentacao/apresentacao_final.pptx) e [PDF](apresentacao/apresentacao_final.pdf). As versões individuais foram preservadas como fontes.
 
-O PowerPoint reúne 13 slides principais e 2 slides de apoio ocultos; o PDF contém os 13 principais. Para editar o conteúdo, usar o PowerPoint.
+O PowerPoint reúne 14 slides principais e 2 slides de apoio ocultos, com roteiro de fala nas anotações de cada slide; o PDF contém os 14 principais. Para editar o conteúdo, usar o PowerPoint.
 
 ## Desenvolvimento
 
